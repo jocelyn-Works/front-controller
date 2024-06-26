@@ -118,7 +118,7 @@ padding: 1rem;
 
 form {
     background-color: #fff;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     max-width: 600px;
@@ -149,6 +149,7 @@ textarea {
     height: 150px;
 }
 input[type="submit"] {
+  align-items: center;
     background-color: #4CAF50;
     color: white;
     border: none;

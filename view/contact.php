@@ -1,9 +1,9 @@
 <?php 
-$meta['description'] = "Ma page de hobby";
+$meta['description'] = "Ma page de contact";
 $title = 'contact'; 
 
-if (file_exists('./include/header.php')) {
-    include './include/header.php';
+if (file_exists('./include/header.php')) {  // verifie l'existance du header
+    include './include/header.php';  // inclue le header
 } else {
     echo "Erreur : Fichier header.php introuvable.";
 } ?>
@@ -13,62 +13,65 @@ if (file_exists('./include/header.php')) {
 
 <div class="container">
 <?php 
-$errors = [];
+$errors = []; // stock les message erreure
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   
-    $civilite = $_POST["civilite"];
+                                        // récupére les valeurs des champs 
+    $civilite = $_POST["civilite"]; 
     $nom = trim($_POST["nom"]);
     $prenom = trim($_POST["prenom"]);
     $email = trim($_POST["email"]);
-    $raison_contact = $_POST["raison_contact"];
+    $contact = $_POST["raison_contact"];
     $message = trim($_POST["message"]);
 
-    if (strlen($message) < 5) {
+    if (strlen($message) < 5) {  // strlean verifie que la taille du message 
         $errors[] = "Le message doit contenir au moins 5 caractères.";
     }
 
     
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {  // filte la  variable avec le filtre qui verifie les email
         $errors[] = "L'adresse email n'est pas valide.";
     }
 
   
-    $valid_reasons = ["Service Comptable", "Autre Raison"];
-    if (!in_array($raison_contact, $valid_reasons)) {
+    $valid = ["Service Comptable", "Autre Raison"]; // les réponse valide
+    if (!in_array($contact, $valid)) {  // verifie les chzamps avec les reponse valide
         $errors[] = "Veuillez choisir une raison de contact valide.";
     }
-    if (empty($nom)) {
+
+    if (empty($nom)) {  // le nom soit pas vide 
         $errors[] = "Le champ nom est requis.";
     }
-    if (empty($prenom)) {
+
+    if (empty($prenom)) {  // le prénom soit pas vide 
         $errors[] = "Le champ prénom est requis.";
     }
 
 
     
 }
-if (empty($errors)) {
+if (empty($errors)) {  // si il y a pas d'erreure
    
-    $person_data = $civilite . " " . $nom . " " . $prenom . " - " . $email . " - " . $raison_contact . " - " . $message . "\n";
+    // stock les réponse de l'utilisateur dans une variable
+    $data = "\n" ." - " ."civilité :" . $civilite ."\n" . " - " . "nom :" . $nom ."\n" . " - " . "prenom :" . $prenom ."\n" . " - " . "email :" . $email ."\n" . " - " ."Raison du contact :" . $contact ."\n" . " - " . "message :" . $message . "\n" . "- - - - - - - - - - - - - - - - - - - -  " ;
     
-    
-    $file = 'contact.txt';
+    // le fichier ou sont stocké ces donné
+    $file = './view/contact.txt';
 
-   
+   // recupére le fichier et ces donné
     $current = file_get_contents($file);
 
-   
-    $current .= $person_data;
+   // le fichier + ces nouvelle donné
+     $current.= $data;
 
-    
-    file_put_contents($file, $current);
+    // inscrit dans le fichier les donné // FILE_APPEND  : ecrase pas les donné
+    file_put_contents($file, $data, FILE_APPEND);
 
-   
-    echo "Formulaire soumis avec succès et les données ont été enregistrées dans people.txt !";
 }
 
   ?>
+
+
 <form action="" method="post">
     <label for="civilite">Civilité :</label>
     <select id="civilite" name="civilite" >
