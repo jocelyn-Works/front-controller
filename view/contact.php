@@ -1,19 +1,21 @@
 <?php
 $meta['description'] = "Ma page de contact";
-$title = 'contact';
+$title = 'Contact';
 
 if (file_exists('./include/header.php')) {  // verifie l'existance du header
     include './include/header.php';  // inclue le header
 } else {
-    echo "Erreur : Fichier header.php introuvable.";
+    echo "Erreur : introuvable.";
 } ?>
 
 <main>
     <div class="title-page">
-        <h1>Contact</h1>
+        <h1><?php echo $title?></h1>
     </div>
 
     <?php
+    session_start();
+    
     $errors = []; // stock les message erreure
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -57,7 +59,7 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
         if (empty($errors)) {  // si il y a pas d'erreure
 
             // stock les réponse de l'utilisateur dans une variable
-            $data = "\n" . " - " . "civilité :" . $civilite . "\n" . " - " . "nom :" . $nom . "\n" . " - " . "prenom :" . $prenom . "\n" . " - " . "email :" . $email . "\n" . " - " . "Raison du contact :" . $contact . "\n" . " - " . "message :" . $message . "\n" . "- - - - - - - - - - - - - - - - - - - -  ";
+            $data = "\n" . "\n". " - " . "civilité :" . $civilite . "\n" . " - " . "nom :" . $nom . "\n" . " - " . "prenom :" . $prenom . "\n" . " - " . "email :" . $email . "\n" . " - " . "Raison du contact :" . $contact . "\n" . " - " . "message :" . $message . "\n" . "\n". "- - - - - - - - - - - - - - - - - - - -  ";
 
             // le fichier ou sont stocké ces donné
             $file = './view/contact.txt';
@@ -75,7 +77,7 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
             <script>
                 Swal.fire({
                     icon: "success",
-                    title: "Your work has been saved",
+                    title: "Formulaire envoyer",
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -146,6 +148,6 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
 <?php if (file_exists('./include/footer.php')) {
     include './include/footer.php';
 } else {
-    echo "Erreur : Fichier footer.php introuvable.";
+    echo "Erreur : introuvable.";
 }
 ?>
