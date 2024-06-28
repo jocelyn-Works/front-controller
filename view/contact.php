@@ -26,6 +26,7 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
         $email = trim($_POST["email"]);
         $contact = $_POST["contact"];
         $message = trim($_POST["message"]);
+        
 
 
         $regex = "/^[a-zA-Z-' ]*$/";
@@ -64,7 +65,8 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
         if (empty($_FILES['userfile']['name'])) {
             $errors['file'] = "Veuillez sélectionner un fichier à télécharger.";
         } else {
-            $uploaddir = './uploads/';
+
+            $uploaddir = './image/uploads/';
             $uploadfile = $uploaddir . basename($_FILES['userfile']['name']);
 
             if ($_FILES['userfile']['size'] > 30000) {
@@ -78,24 +80,26 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
             }
 
             if (empty($errors)) {
-                if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-                    echo "Le fichier est valide, et a été téléchargé avec succès.";
-                } else {
+                if (!move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
                     $errors['file'] = "Erreur lors du téléchargement du fichier.";
                 }
-            }
-        }
+               
+               
 
+                //var_dump($_FILES);
+            }
+           
+        }
         if (!empty($errors)) {  // stocké les valeur des champs si il y a des erreur
             $_SESSION["nom"] = $nom;
             $_SESSION["prenom"] = $prenom;
             $_SESSION["email"] = $email;
             $_SESSION["message"] = $message;
+           
         } else {
             // suprime les valeur stocké si pas d'erreur 
             unset($_SESSION["nom"], $_SESSION["prenom"], $_SESSION["email"], $_SESSION["message"]);
         }
-
 
         if (empty($errors)) {  // si il y a pas d'erreure
 
@@ -113,7 +117,7 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
 
             // inscrit dans le fichier les donné // FILE_APPEND  : ecrase pas les donné
             file_put_contents($file, $data, FILE_APPEND);
-    ?>
+            ?>
 
             <script>
                 Swal.fire({
@@ -124,13 +128,14 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
                 });
             </script>
     <?php
+   
         }
     }
 
     ?>
 
     <form action="index.php?page=contact" method="post" enctype="multipart/form-data">
-        <label for="civilite">Civilité :</label>
+        <label for="civilite">Civilité : </label>
         <select name="civilite">
             <option value="">Choisir...</option>
             <option value="Monsieur" <?php if (isset($civilite) && $civilite == "Monsieur"); ?>>Monsieur</option>
@@ -181,7 +186,7 @@ if (file_exists('./include/header.php')) {  // verifie l'existance du header
 
         <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
         <!-- Le nom de l'élément input détermine le nom dans le tableau $_FILES -->
-        Envoyez ce fichier : <input name="userfile" type="file" />
+        Envoyez ce fichier : <input name="userfile" type="file" value="<?php echo htmlspecialchars($_SESSION["userfile"] ?? ''); ?>" />
         <?php if (isset($errors['file'])) : ?>
             <div class="error"><?php echo $errors['file']; ?></div>
         <?php endif; ?>
